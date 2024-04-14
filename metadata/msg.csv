@@ -1,0 +1,10 @@
+Code, Message
+"5000", "Finished with exit code 0."
+"5001", "Backend app starts."
+"5002", "Backend app finishes."
+"5003", "Process starts."
+"5004", "Process finishes."
+"5005", "Requested ticker is {}."
+"7001", "Failed to connect to the market."
+"7002", "An internal server error occurred."
+"7003", "An invalid ticker is requested."
