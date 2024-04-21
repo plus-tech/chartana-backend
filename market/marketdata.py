@@ -2,6 +2,7 @@ import pandas_datareader.data as pdr
 import pandas_datareader.nasdaq_trader as pnt
 
 import pandas as pd
+import numpy as np
 import json
 
 import env
@@ -86,16 +87,41 @@ def GetSymbolPricesImpl(ticker):
         if df is not None:
             df['Date'] = df.index
             df['id'] = range(1, len(df) + 1)
+            #
+            # Return prices as an list with the following format.
+            #   [['Date', 'Low', 'Open', 'Close', 'High', 'Volume']
+            #   [Timestamp('2024-01-26 00:00:00') 1734.0 1755.0 1748.0 1783.0 405600.0]
+            #   ...
+            #   ]
+            # columns = ['Date', 'Low', 'Open', 'Close', 'High', 'Volume']
+            # prices = np.vstack((columns, df[columns].to_numpy())).tolist()
+
+            #
+            # Return prices as a dictionary with the following format.
+            #   [
+            #     {
+            #         "Close": 1449.0,
+            #         "Date": "Mon, 08 Apr 2024 00:00:00 GMT",
+            #         "High": 1467.0,
+            #         "Low": 1440.0,
+            #         "Open": 1451.0,
+            #         "Volume": 182200.0,
+            #         "id": 1
+            #     },
+            #   ...
+            #   ]
             prices = df.to_dict('records')
 
     except BizException as e:
         Logging.GetLogger().error(f"{str(e)}")
+        raise e
 
     except Exception as e:
         #
         # log an error
         emsg = msg.MSG[msg.ECONN]
         Logging.GetLogger().error(f"{emsg} ({str(e)})")
+        raise e
 
     Logging.GetLogger().debug(msg.MSG[msg.IFUNCEND])
     return prices

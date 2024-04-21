@@ -34,8 +34,12 @@ def GetSymbolList():
 @cross_origin()
 def GetSymbolPrices():
     ticker = request.args.get('ticker')
-    print('ticker: ', ticker)
-    return GetSymbolPricesImpl(ticker)
+
+    if Config.DEBUG:
+        print('ticker: {} type: {}'.format(ticker, type(ticker)))
+
+    res = GetSymbolPricesImpl(ticker)
+    return res
 
 
 @app.errorhandler(Exception)
@@ -43,6 +47,9 @@ def handle_exception(e):
     """
         Handle the runtime exceptions in the app.
     """
+    if Config.DEBUG:
+        print('exception:', e)
+
     #
     # Handle HTTP errors
     if isinstance(e, HTTPException):
