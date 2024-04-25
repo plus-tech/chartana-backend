@@ -11,11 +11,12 @@ from flask import request
 from flask import json
 from werkzeug.exceptions import HTTPException
 
+from exception.bizexception import BizException
 from market.marketdata import GetSymbolListImpl, GetSymbolPricesImpl
 
 from env import Config
 import msg
-from tools.logging import Logging
+from common.logging import Logging
 
 
 app = Flask(__name__)
@@ -27,19 +28,23 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route("/symbollist")
 @cross_origin()
 def GetSymbolList():
-    return GetSymbolListImpl()
+    fmt = request.args.get('fmt')
+    if Config.DEBUG:
+        print('symbols fmt: {}'.format(fmt))
+
+    return GetSymbolListImpl(fmt)
 
 
 @app.route("/symbolprices")
 @cross_origin()
 def GetSymbolPrices():
     ticker = request.args.get('ticker')
+    fmt = request.args.get('fmt')
 
     if Config.DEBUG:
-        print('ticker: {} type: {}'.format(ticker, type(ticker)))
+        print('ticker: {} fmt: {}'.format(ticker, fmt))
 
-    res = GetSymbolPricesImpl(ticker)
-    return res
+    return GetSymbolPricesImpl(ticker, fmt)
 
 
 @app.errorhandler(Exception)

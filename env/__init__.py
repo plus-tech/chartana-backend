@@ -3,7 +3,7 @@ A package declares environment variables used by the app.
 """
 import logging
 
-from tools.logging import Logging
+from common.logging import Logging
 from msg import Msg
 
 #
@@ -24,6 +24,12 @@ LOGERROR: int = logging.ERROR
 LOGCRITICAL: int = logging.CRITICAL
 LOGFATAL: int = logging.FATAL
 
+#
+# Data formats
+DATAFMT = {
+    'LIST': 'LIST',
+    'DICT': 'DICTIONARY'
+}
 
 class Config(object):
     """
